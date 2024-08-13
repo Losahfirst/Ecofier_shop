@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecofier.shop - Payment</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+
+        .payment-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+            border-radius: 10px;
+        }
+
+        .payment-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .payment-item img {
+            width: 100px;
+            height: auto;
+        }
+
+        .payment-item-info {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .payment-total {
+            text-align: right;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .payment-actions {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .payment-actions button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .payment-actions button:hover {
+            background-color: #218838;
+        }
+
+        .phone-form {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+
+        .phone-form input {
+            padding: 10px;
+            margin-top: 10px;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .phone-form button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .phone-form button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo"><img src="src/im.png" width="100px"></div>
+        <nav class="nav">
+            <a href="index.html">Acceuil</a>
+            <a href="index.html#shop">Boutique</a>
+            <a href="index.html#about">A propos</a>
+            <a href="index.html#contact">Contact</a>
+            <a href="cart.html" class="cart"><span class="material-symbols-outlined">
+                    shopping_cart
+                </span> <span id="cart-count" class="cart-count">0</span></a>
+        </nav>
+    </header>
+
+    <div class="payment-container">
+        <h1>Confirmation de Paiement</h1>
+        <br>
+        <button id="85" style="border: 0px solid transparent;"><img src="src/wave.png" width="100px"
+                alt="Wave Payment"></button>
+        <a style="margin-left:10px ;"><img src="src/visa.webp" width="100px" alt="Visa Payment"></a>
+        <div id="payment-items">
+            <!-- Payment items will be dynamically loaded here -->
+        </div>
+        <div class="payment-total">
+            Total: <span id="payment-total">0 XOF</span>
+        </div>
+
+        <div class="phone-form" id="phone-form">
+            <h2>Veuillez entrer votre numéro de téléphone :</h2>
+            <form id="phone-form-content">
+                <input type="text" id="phone-number" placeholder="Numéro de téléphone" required>
+                <button type="submit" style="background-color: #218838; color: white;">Confirmer le Paiement</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" style="margin-top: 200px;">
+        <p>&copy; 2024 Ecofier.shop. All rights reserved.</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+    <script>
+        function displayCartItems() {
+            let cart = JSON.parse(localStorage.getItem('checkoutData')) || [];
+            let paymentItemsContainer = document.getElementById('payment-items');
+            let total = 0;
+
+            paymentItemsContainer.innerHTML = ''; // Clear previous items
+
+            cart.forEach(item => {
+                total += item.price * item.quantity;
+                let itemElement = document.createElement('div');
+                itemElement.classList.add('payment-item');
+                itemElement.innerHTML = `
+                    <img src="src/1069102.png" alt="${item.name}" style="width:50px;"> <!-- Use appropriate image path -->
+                    <div class="payment-item-info">
+                        <h3>${item.name}</h3>
+                        <p>${item.quantity} x ${item.price} XOF</p>
+                    </div>
+                    <span>Total: ${item.price * item.quantity} XOF</span>
+                `;
+                paymentItemsContainer.appendChild(itemElement);
+            });
+
+            document.getElementById('payment-total').textContent = total.toLocaleString() + ' XOF';
+        }
+
+        function initiatePayment() {
+            // Show the phone number form
+            document.getElementById('phone-form').style.display = 'block';
+        }
+
+        document.getElementById('phone-form-content').addEventListener('submit', function (event) {
+            event.preventDefault();
+            let phoneNumber = document.getElementById('phone-number').value;
+
+            // Process the phone number and continue with the payment
+            alert('Message de paiement envoyé, En attente de confirmation ');
+            // Call the payment API or process further here
+
+            // Redirect to invoice page
+            localStorage.removeItem('checkoutData'); // Clear checkout data
+            window.location.href = 'invoice.html'; // Redirect to invoice page
+        });
+
+        // Add event listener to button with ID 85
+        document.getElementById('85').addEventListener('click', initiatePayment);
+
+        document.addEventListener('DOMContentLoaded', displayCartItems);
+    </script>
+</body>
+
+</html>
